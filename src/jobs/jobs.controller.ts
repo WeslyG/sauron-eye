@@ -1,14 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete } from "@nestjs/common";
+import { Job, Prisma } from "@prisma/client";
 import { JobsService } from "./jobs.service";
-import { CreateJobDto } from "./dto/create-job.dto";
-import { UpdateJobDto } from "./dto/update-job.dto";
 
 @Controller("jobs")
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Post()
-  create(@Body() createJobDto: CreateJobDto) {
+  create(@Body() createJobDto: Prisma.JobCreateInput): Promise<Job> {
     return this.jobsService.create(createJobDto);
   }
 
@@ -18,17 +17,17 @@ export class JobsController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.jobsService.findOne(+id);
+  findOne(@Param("id") id: string): Promise<Job | null> {
+    return this.jobsService.findOne(id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobsService.update(+id, updateJobDto);
-  }
+  // @Patch(":id")
+  // update(@Param("id") id: string, @Body() updateJobDto: UpdateJobDto) {
+  //   return this.jobsService.update(+id, updateJobDto);
+  // }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.jobsService.remove(+id);
+    return this.jobsService.remove(id);
   }
 }
